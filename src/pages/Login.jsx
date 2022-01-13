@@ -1,4 +1,7 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { setTokenAction } from '../redux/actions';
 import logo from '../trivia.png';
 
 class Login extends React.Component {
@@ -20,12 +23,16 @@ class Login extends React.Component {
   }
 
   getToken = () => {
+    const { setToken } = this.props;
     const END_POINT = 'https://opentdb.com/api_token.php?command=request';
 
     try {
       fetch(END_POINT)
         .then((response) => response.json())
-        .then((data) => localStorage.setItem('token', data.token));
+        .then(({ token }) => {
+          setToken(token);
+          localStorage.setItem('token', token);
+        });
     } catch (error) {
       console.error(error);
     }
@@ -82,4 +89,11 @@ class Login extends React.Component {
   }
 }
 
-export default Login;
+const mapDispatchToProps = (dispatch) => ({
+  setToken: (token) => dispatch(setTokenAction(token)) });
+
+Login.propTypes = {
+  setToken: PropTypes.func.isRequired,
+};
+
+export default connect(null, mapDispatchToProps)(Login);
