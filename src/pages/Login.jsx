@@ -1,4 +1,5 @@
 import React from 'react';
+import logo from '../trivia.png';
 
 class Login extends React.Component {
   constructor() {
@@ -38,27 +39,32 @@ class Login extends React.Component {
   render() {
     const { isDisabled } = this.state;
     return (
-      <section>
-        <input
-          type="text"
-          name="userName"
-          data-testid="input-player-name"
-          onChange={ this.onChange }
-        />
-        <input
-          type="email"
-          name="email"
-          onChange={ this.onChange }
-          data-testid="input-gravatar-email"
-        />
+      <main>
+        <header className="App-header">
+          <img src={ logo } className="App-logo" alt="logo" />
+          <div>
+            <input
+              type="text"
+              name="userName"
+              data-testid="input-player-name"
+              onChange={ this.onChange }
+            />
+            <input
+              type="email"
+              name="email"
+              onChange={ this.onChange }
+              data-testid="input-gravatar-email"
+            />
 
-        <input
-          type="button"
-          disabled={ isDisabled }
-          value="INICIAR"
-          data-testid="btn-play"
-        />
-      </section>
+            <input
+              type="button"
+              disabled={ isDisabled }
+              value="INICIAR"
+              data-testid="btn-play"
+            />
+          </div>
+        </header>
+      </main>
     );
   }
 }
