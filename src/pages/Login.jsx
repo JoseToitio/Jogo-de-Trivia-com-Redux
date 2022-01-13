@@ -19,6 +19,18 @@ class Login extends React.Component {
     this.setState({ [name]: value }, this.updateButtonState);
   }
 
+  getToken = () => {
+    const END_POINT = 'https://opentdb.com/api_token.php?command=request';
+
+    try {
+      fetch(END_POINT)
+        .then((response) => response.json())
+        .then((data) => localStorage.setItem('token', data.token));
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   isEmailValid(email) {
     const re = /\S+@\S+\.com/;
     const result = re.test(email);
@@ -61,6 +73,7 @@ class Login extends React.Component {
               disabled={ isDisabled }
               value="INICIAR"
               data-testid="btn-play"
+              onClick={ this.getToken }
             />
           </div>
         </header>
