@@ -1,9 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import logo from '../trivia.png';
 
 class Login extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       email: '',
       userName: '',
@@ -12,11 +13,17 @@ class Login extends React.Component {
     this.isEmailValid = this.isEmailValid.bind(this);
     this.onChange = this.onChange.bind(this);
     this.updateButtonState = this.updateButtonState.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   onChange({ target }) {
     const { name, value } = target;
     this.setState({ [name]: value }, this.updateButtonState);
+  }
+
+  handleClick() {
+    const { history } = this.props;
+    history.push('/settings');
   }
 
   isEmailValid(email) {
@@ -62,6 +69,14 @@ class Login extends React.Component {
               value="INICIAR"
               data-testid="btn-play"
             />
+
+            <button
+              type="button"
+              data-testid="btn-settings"
+              onClick={ this.handleClick }
+            >
+              Configurações do Jogo
+            </button>
           </div>
         </header>
       </main>
@@ -69,4 +84,7 @@ class Login extends React.Component {
   }
 }
 
+Login.propTypes = {
+  history: PropTypes.objectOf(PropTypes.any).isRequired,
+};
 export default Login;
