@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { setTokenAction } from '../redux/actions';
+import { setPlayerAction, setTokenAction } from '../redux/actions';
 import logo from '../trivia.png';
 
 class Login extends React.Component {
@@ -24,8 +24,11 @@ class Login extends React.Component {
   }
 
   getToken = () => {
-    const { setToken } = this.props;
+    const { setToken, setPlayer } = this.props;
+    const { email, userName } = this.state;
     const END_POINT = 'https://opentdb.com/api_token.php?command=request';
+
+    setPlayer({ name: userName, gravatarEmail: email });
 
     try {
       fetch(END_POINT)
@@ -105,11 +108,14 @@ class Login extends React.Component {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  setToken: (token) => dispatch(setTokenAction(token)) });
+  setToken: (token) => dispatch(setTokenAction(token)),
+  setPlayer: (player) => dispatch(setPlayerAction(player)),
+});
 
 Login.propTypes = {
   setToken: PropTypes.func.isRequired,
   history: PropTypes.objectOf(PropTypes.any).isRequired,
+  setPlayer: PropTypes.func.isRequired,
 };
 
 export default connect(null, mapDispatchToProps)(Login);
