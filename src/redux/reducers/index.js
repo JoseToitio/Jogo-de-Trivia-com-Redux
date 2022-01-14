@@ -1,5 +1,19 @@
-import { combineReducers } from 'redux';
+import { SET_TOKEN } from '../actions';
 
-const rootReducer = combineReducers({ });
+const INITIAL_STATE = {
+  token: '',
+};
 
-export default rootReducer;
+function triviaReducer(state = INITIAL_STATE, action) {
+  switch (action.type) {
+  case SET_TOKEN:
+    return {
+      ...state,
+      token: action.token,
+    };
+  default:
+    return state;
+  }
+}
+
+export default triviaReducer;
