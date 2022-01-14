@@ -10,13 +10,17 @@ function Header(props) {
 
   return (
     <header>
-      <img src={ `https://www.gravatar.com/avatar/${hash}` } alt={ `avatar do ${name}` } />
-      <div>
+      <img
+        src={ `https://www.gravatar.com/avatar/${hash}` }
+        alt={ `avatar do ${name}` }
+        data-testid="header-profil-picture"
+      />
+      <div data-testid="header-player-name">
         Jogador:
         {' '}
         {name}
       </div>
-      <div>
+      <div data-testid="header-score">
         Pontos:
         {' '}
         {score}
@@ -34,7 +38,7 @@ Header.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  player: state.triviaReducer.player,
+  player: state.player,
 });
 
 export default connect(mapStateToProps)(Header);
