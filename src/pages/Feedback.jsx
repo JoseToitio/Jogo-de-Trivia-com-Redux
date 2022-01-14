@@ -9,18 +9,25 @@ class Feedback extends React.Component {
     this.handleClick = this.handleClick.bind(this);
   }
 
-  handleClick() {
+  handleClick(rota) {
     const { history } = this.props;
-    history.push('/');
-    console.log('cliquei');
+    history.push(`/${rota}`);
   }
 
   render() {
-    console.log(this.props);
     return (
       <div>
         <Header />
-        <Button onClick={ this.handleClick } />
+        <Button
+          onClick={ () => this.handleClick('') }
+          name="Play Again"
+          testid="btn-play-again"
+        />
+        <Button
+          onClick={ () => this.handleClick('ranking') }
+          name="Ranking"
+          testid="btn-ranking"
+        />
       </div>
     );
   }
