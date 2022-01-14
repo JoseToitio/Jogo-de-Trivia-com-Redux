@@ -5,8 +5,8 @@ import { setTokenAction } from '../redux/actions';
 import logo from '../trivia.png';
 
 class Login extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       email: '',
       userName: '',
@@ -15,6 +15,7 @@ class Login extends React.Component {
     this.isEmailValid = this.isEmailValid.bind(this);
     this.onChange = this.onChange.bind(this);
     this.updateButtonState = this.updateButtonState.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   onChange({ target }) {
@@ -36,6 +37,10 @@ class Login extends React.Component {
     } catch (error) {
       console.error(error);
     }
+
+  handleClick() {
+    const { history } = this.props;
+    history.push('/settings');
   }
 
   isEmailValid(email) {
@@ -82,6 +87,14 @@ class Login extends React.Component {
               data-testid="btn-play"
               onClick={ this.getToken }
             />
+
+            <button
+              type="button"
+              data-testid="btn-settings"
+              onClick={ this.handleClick }
+            >
+              Configurações do Jogo
+            </button>
           </div>
         </header>
       </main>
@@ -94,6 +107,7 @@ const mapDispatchToProps = (dispatch) => ({
 
 Login.propTypes = {
   setToken: PropTypes.func.isRequired,
+  history: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 export default connect(null, mapDispatchToProps)(Login);
