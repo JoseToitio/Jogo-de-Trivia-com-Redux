@@ -10,8 +10,12 @@ function Header(props) {
 
   return (
     <header>
-      <img src={ `https://www.gravatar.com/avatar/${hash}` } alt={ `avatar do ${name}` } data-testid="header-profil-picture" />
-      <div data-testid="header-player-nam">
+      <img
+        src={ `https://www.gravatar.com/avatar/${hash}` }
+        alt={ `avatar do ${name}` }
+        data-testid="header-profil-picture"
+      />
+      <div data-testid="header-player-name">
         Jogador:
         {' '}
         {name}
