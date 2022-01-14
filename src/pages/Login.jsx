@@ -33,10 +33,13 @@ class Login extends React.Component {
         .then(({ token }) => {
           setToken(token);
           localStorage.setItem('token', token);
+          const { history } = this.props;
+          history.push('/game');
         });
     } catch (error) {
       console.error(error);
     }
+  }
 
   handleClick() {
     const { history } = this.props;
@@ -57,7 +60,6 @@ class Login extends React.Component {
     const minLength = 1;
     const valid = !(isEmailValid(email) && userName.length >= minLength);
     this.setState({ isDisabled: valid });
-    console.log(isEmailValid(email));
   }
 
   render() {
