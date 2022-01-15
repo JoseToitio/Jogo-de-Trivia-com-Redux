@@ -36,7 +36,9 @@ class Game extends React.Component {
   };
 
   timeCountdown = () => {
+    const { time } = this.state;
     this.setState((prevState) => ({ time: prevState.time - 1 }));
+    if (time === 1) this.setState({ answerSelected: true });
   }
 
   setTimer = () => {
