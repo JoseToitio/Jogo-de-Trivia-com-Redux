@@ -7,7 +7,7 @@ function Messeges(props) {
   const minScore = 3;
   const msg = parseInt(assertions, 10) < minScore ? 'Could be better...' : 'Well Done!';
   return (
-    <section>
+    <section data-testid="feedback-text">
       <h1 data-testid="feedback-text">{msg}</h1>
       <h2 data-testid="feedback-total-question">{assertions}</h2>
       <h2 data-testid="feedback-total-score">{score}</h2>
