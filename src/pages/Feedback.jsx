@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Button from './components/Button';
 import Header from './components/Header';
+import Messeges from './components/Messeges';
 
 class Feedback extends React.Component {
   constructor(props) {
@@ -18,6 +19,7 @@ class Feedback extends React.Component {
     return (
       <div>
         <Header />
+        <Messeges />
         <Button
           onClick={ () => this.handleClick('') }
           name="Play Again"
