@@ -21,8 +21,6 @@ function Header(props) {
         {name}
       </div>
       <div data-testid="header-score">
-        Pontos:
-        {' '}
         {score}
       </div>
     </header>
