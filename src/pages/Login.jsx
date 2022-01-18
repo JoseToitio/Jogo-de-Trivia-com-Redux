@@ -50,11 +50,7 @@ class Login extends React.Component {
   }
 
   isEmailValid(email) {
-    const re = /\S+@\S+\.com/;
-    const result = re.test(email);
-    if (result === true) {
-      return true;
-    }
+    return email.length !== 0;
   }
 
   updateButtonState() {
