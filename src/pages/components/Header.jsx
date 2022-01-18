@@ -15,11 +15,11 @@ function Header(props) {
         alt={ `avatar do ${name}` }
         data-testid="header-profile-picture"
       />
+
       <div data-testid="header-player-name">
-        Jogador:
-        {' '}
-        {name}
+        { `Jogador: ${name}`}
       </div>
+
       <div data-testid="header-score">
         {score}
       </div>

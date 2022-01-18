@@ -4,21 +4,20 @@ import md5 from 'crypto-js/md5';
 import PropTypes from 'prop-types';
 import fetchQuestions from '../services/fetchQuestions';
 import { setPlayerAction } from '../redux/actions';
-import CreateButtons from './components/CreateButtons';
+import Questions from './components/Questions';
+import Header from './components/Header';
 
 class Game extends React.Component {
   constructor() {
     super();
     this.state = {
       options: [],
-      count: 0,
+      questionNumber: 0,
       time: 30,
       answerSelected: false,
-      soma: 0,
+      points: 0,
       assertions: 0,
     };
-    this.clickCount = this.clickCount.bind(this);
-    this.respost = this.respost.bind(this);
   }
 
   componentDidMount() {
@@ -53,104 +52,98 @@ class Game extends React.Component {
     this.intervalId = setInterval(this.timeCountdown, this.seconds(1));
   }
 
-  respost({ target }) {
-    const resposta = target.innerHTML;
+  selectAnswer = ({ target }) => {
     const { options, time } = this.state;
-    const DEZ = 10;
-    const THREE = 3;
-    if (options.some((x) => x.correct_answer === resposta)) {
-      this.setState((prevState) => ({
+
+    const selectedAnswer = target.innerHTML;
+    const ten = 10;
+    const three = 3;
+
+    const points = {
+      easy: ten + time,
+      medium: ten + (time * 2),
+      hard: ten + (time * three),
+    };
+
+    const answerResult = options.find((option) => (
+      option.correct_answer === selectedAnswer
+    ));
+
+    if (answerResult) {
+      return this.setState((prevState) => ({
         assertions: prevState.assertions + 1,
+        points: prevState.points + points[answerResult.difficulty],
       }));
-      if (options.some((x) => x.difficulty === 'easy')) {
-        this.setState((prevState) => ({
-          soma: prevState.soma + DEZ + time,
-        }));
-      } else if (options.some((x) => x.difficulty === 'medium')) {
-        this.setState((prevState) => ({
-          soma: prevState.soma + DEZ + (time * 2),
-        }));
-      } else if (options.some((x) => x.difficulty === 'hard')) {
-        this.setState((prevState) => ({
-          soma: prevState.soma + DEZ + (time * THREE),
-        }));
-      }
     }
-    this.setState({
-      answerSelected: true,
-    });
+
+    this.setState({ answerSelected: true });
   }
 
-  clickCount() {
+  changeQuestion = () => {
+    const { points, assertions, questionNumber } = this.state;
+    const { player: { name, gravatarEmail }, history, setPlayer } = this.props;
+
     this.setState((prevState) => ({
-      count: prevState.count + 1,
+      questionNumber: prevState.questionNumber + 1,
       answerSelected: false,
     }));
-    const { soma, assertions } = this.state;
-    const { player } = this.props;
-    const { name, gravatarEmail } = player;
+
+    this.setTimer();
+
     const hash = md5(gravatarEmail).toString();
     const email = `https://www.gravatar.com/avatar/${hash}`;
-    this.setTimer();
-    localStorage.setItem('ranking', JSON.stringify({
-      name,
-      score: soma,
-      picture: email,
-    }));
-    const { count } = this.state;
-    const FOUR = 4;
-    if (count === FOUR) {
-      const { history } = this.props;
-      history.push('/feedback');
-    }
-    const { setPlayer } = this.props;
-    setPlayer({
-      score: soma,
-      assertions,
-    });
+
+    localStorage.setItem(
+      'ranking', JSON.stringify({ name, score: points, picture: email }),
+    );
+
+    const lastNumber = 4;
+    const questionsOver = questionNumber === lastNumber;
+
+    if (questionsOver) history.push('/feedback');
+
+    setPlayer({ score: points, assertions });
   }
 
   render() {
-    const { options, count, time, answerSelected, soma } = this.state;
-    const { clickCount, respost } = this;
+    const { options, questionNumber, time, answerSelected, points } = this.state;
+    const { player } = this.props;
 
     return (
       <section>
+        <Header player={ player } />
+
         <div data-testid="question-category">
-          {options.length >= 1 ? options[count].category : 'Carregando'}
+          {options.length >= 1 ? options[questionNumber].category : 'Carregando'}
         </div>
 
         <div data-testid="question-text">
-          {options.length >= 1 ? options[count].question : 'Carregando'}
+          {options.length >= 1 ? options[questionNumber].question : 'Carregando'}
         </div>
 
         <div>{`Tempo: ${time}`}</div>
 
-        <div>
+        <div data-testid="answer-options">
           {options.length >= 1 ? (
-            <CreateButtons
+            <Questions
               options={ options }
-              count={ count }
+              questionNumber={ questionNumber }
               answerSelected={ answerSelected }
               time={ time }
-              respost={ respost }
-            />
-          ) : (
-            'Carregando'
-          )}
+              selectAnswer={ this.selectAnswer }
+            />) : ('Carregando')}
         </div>
 
-        {answerSelected === true || time === 0 ? (
+        {(answerSelected === true || time === 0) && (
           <input
             value="NEXT"
             type="button"
             data-testid="btn-next"
-            onClick={ clickCount }
+            onClick={ this.changeQuestion }
           />
-        ) : (
-          ''
         )}
-        <div data-testid="header-score">{soma}</div>
+
+        <div data-testid="header-score">{points}</div>
       </section>
     );
   }
