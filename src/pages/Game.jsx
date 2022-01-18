@@ -53,8 +53,8 @@ class Game extends React.Component {
   }
 
   selectAnswer = ({ target }) => {
-    const { options, time } = this.state;
-
+    const { options, time, questionNumber } = this.state;
+    const { correct_answer: correct } = options[questionNumber];
     const selectedAnswer = target.innerHTML;
     const ten = 10;
     const three = 3;
@@ -65,17 +65,15 @@ class Game extends React.Component {
       hard: ten + (time * three),
     };
 
-    const answerResult = options.find((option) => (
-      option.correct_answer === selectedAnswer
-    ));
-
-    if (answerResult) {
+    if (correct === selectedAnswer) {
+      this.setState({
+        answerSelected: true,
+      });
       return this.setState((prevState) => ({
         assertions: prevState.assertions + 1,
-        points: prevState.points + points[answerResult.difficulty],
+        points: prevState.points + points[options[questionNumber].difficulty],
       }));
     }
-
     this.setState({ answerSelected: true });
   }
 

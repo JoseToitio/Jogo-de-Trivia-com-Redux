@@ -5,7 +5,7 @@ const INITIAL_STATE = {
   player: {
     name: '',
     assertions: '',
-    score: '0',
+    score: 0,
     gravatarEmail: '',
   },
 };
