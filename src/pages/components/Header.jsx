@@ -13,16 +13,14 @@ function Header(props) {
       <img
         src={ `https://www.gravatar.com/avatar/${hash}` }
         alt={ `avatar do ${name}` }
-        data-testid="header-profil-picture"
+        data-testid="header-profile-picture"
       />
+
       <div data-testid="header-player-name">
-        Jogador:
-        {' '}
-        {name}
+        { `Jogador: ${name}`}
       </div>
+
       <div data-testid="header-score">
-        Pontos:
-        {' '}
         {score}
       </div>
     </header>
