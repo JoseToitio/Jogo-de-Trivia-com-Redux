@@ -4,7 +4,7 @@ const INITIAL_STATE = {
   token: '',
   player: {
     name: '',
-    assertions: '',
+    assertions: 0,
     score: 0,
     gravatarEmail: '',
   },
