@@ -52,12 +52,14 @@ class Game extends React.Component {
     this.intervalId = setInterval(this.timeCountdown, this.seconds(1));
   }
 
-  selectAnswer = ({ target }) => {
-    const { options, time } = this.state;
-
+  optionClick = ({ target }) => {
+    const { options, time, questionNumber, points: prevScore, assertions } = this.state;
+    const { setPlayer } = this.props;
+    const { correct_answer: correct } = options[questionNumber];
     const selectedAnswer = target.innerHTML;
     const ten = 10;
     const three = 3;
+    const isCorrect = correct === selectedAnswer;
 
     const points = {
       easy: ten + time,
@@ -65,23 +67,22 @@ class Game extends React.Component {
       hard: ten + (time * three),
     };
 
-    const answerResult = options.find((option) => (
-      option.correct_answer === selectedAnswer
-    ));
+    const newScore = prevScore + points[options[questionNumber].difficulty];
 
-    if (answerResult) {
+    if (isCorrect) {
+      setPlayer({ score: newScore, assertions: assertions + 1 });
       return this.setState((prevState) => ({
+        answerSelected: true,
         assertions: prevState.assertions + 1,
-        points: prevState.points + points[answerResult.difficulty],
+        points: newScore,
       }));
     }
-
     this.setState({ answerSelected: true });
   }
 
-  changeQuestion = () => {
-    const { points, assertions, questionNumber } = this.state;
-    const { player: { name, gravatarEmail }, history, setPlayer } = this.props;
+  nextButtonClick = () => {
+    const { points, questionNumber } = this.state;
+    const { player: { name, gravatarEmail }, history } = this.props;
 
     this.setState((prevState) => ({
       questionNumber: prevState.questionNumber + 1,
@@ -101,8 +102,6 @@ class Game extends React.Component {
     const questionsOver = questionNumber === lastNumber;
 
     if (questionsOver) history.push('/feedback');
-
-    setPlayer({ score: points, assertions });
   }
 
   render() {
@@ -130,7 +129,7 @@ class Game extends React.Component {
               questionNumber={ questionNumber }
               answerSelected={ answerSelected }
               time={ time }
-              selectAnswer={ this.selectAnswer }
+              selectAnswer={ this.optionClick }
             />) : ('Carregando')}
         </div>
 
@@ -139,7 +138,7 @@ class Game extends React.Component {
             value="NEXT"
             type="button"
             data-testid="btn-next"
-            onClick={ this.changeQuestion }
+            onClick={ this.nextButtonClick }
           />
         )}
 
