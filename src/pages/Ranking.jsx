@@ -29,7 +29,7 @@ class Ranking extends Component {
 
   render() {
     const { player } = this.state;
-
+    console.log(player);
     return (
       <div>
         <h1 data-testid="ranking-title">Ranking</h1>
