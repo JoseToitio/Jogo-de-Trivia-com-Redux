@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import fetchQuestions from '../services/fetchQuestions';
 import { setPlayerAction } from '../redux/actions';
 import Questions from './components/Questions';
+import Header from './components/Header';
 
 class Game extends React.Component {
   constructor() {
@@ -69,7 +70,7 @@ class Game extends React.Component {
     ));
 
     if (answerResult) {
-      this.setState((prevState) => ({
+      return this.setState((prevState) => ({
         assertions: prevState.assertions + 1,
         points: prevState.points + points[answerResult.difficulty],
       }));
@@ -106,9 +107,12 @@ class Game extends React.Component {
 
   render() {
     const { options, questionNumber, time, answerSelected, points } = this.state;
+    const { player } = this.props;
 
     return (
       <section>
+        <Header player={ player } />
+
         <div data-testid="question-category">
           {options.length >= 1 ? options[questionNumber].category : 'Carregando'}
         </div>
@@ -119,7 +123,7 @@ class Game extends React.Component {
 
         <div>{`Tempo: ${time}`}</div>
 
-        <div>
+        <div data-testid="answer-options">
           {options.length >= 1 ? (
             <Questions
               options={ options }
