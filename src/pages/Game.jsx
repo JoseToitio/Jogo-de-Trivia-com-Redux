@@ -37,6 +37,7 @@ class Game extends React.Component {
       localStorage.setItem('token', newToken);
 
       await fetchQuestions(newToken).then((result) => this.setState({ options: result }));
+      this.setTimer();
     } catch (error) {
       console.error(error);
     }
