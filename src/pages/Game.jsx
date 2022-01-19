@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import md5 from 'crypto-js/md5';
 import PropTypes from 'prop-types';
 import fetchQuestions from '../services/fetchQuestions';
-import { setPlayerAction } from '../redux/actions';
+import { setPlayerAction, setTokenAction } from '../redux/actions';
 import Questions from './components/Questions';
 import Header from './components/Header';
 
@@ -20,19 +20,37 @@ class Game extends React.Component {
     };
   }
 
-  componentDidMount() {
-    const token = localStorage.getItem('token');
+  async componentDidMount() {
+    const { setToken } = this.props;
+    const currentToken = localStorage.getItem('token');
+    const TOKEN_END_POINT = 'https://opentdb.com/api_token.php?command=request';
 
-    fetchQuestions(token).then((data) => {
-      this.setState({ options: data.results });
-    });
+    const { response_code: code, results } = await fetchQuestions(currentToken);
 
-    this.setTimer();
+    const errorCode = 3;
+    if (code !== errorCode) return this.setOptions(results);
+
+    try {
+      const { token: newToken } = await (await fetch(TOKEN_END_POINT)).json();
+
+      setToken(newToken);
+      localStorage.setItem('token', newToken);
+
+      await fetchQuestions(newToken).then((result) => this.setState({ options: result }));
+      this.setTimer();
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   componentDidUpdate() {
     const { time, answerSelected } = this.state;
     if (time <= 0 || answerSelected === true) clearInterval(this.intervalId);
+  }
+
+  setOptions = (results) => {
+    this.setState({ options: results });
+    this.setTimer();
   }
 
   seconds = (second) => {
@@ -155,6 +173,7 @@ Game.propTypes = {
   }).isRequired,
   history: PropTypes.string.isRequired,
   setPlayer: PropTypes.string.isRequired,
+  setToken: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -164,6 +183,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   setPlayer: (player) => dispatch(setPlayerAction(player)),
+  setToken: (token) => dispatch(setTokenAction(token)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Game);
